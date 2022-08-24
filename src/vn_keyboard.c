@@ -19,6 +19,10 @@
  * gcc von_neumann.c vn_keyboard.c -o /path/to/executable [optional:
  * -D NUM_BYTES=<int> -D VERBOSE]
  *
+ * The optional NUM_BYTES definition allows the user to specify how many total bytes
+ * are generated (the default is 16 = 128 bits). The verbose flag will cause the
+ * program to print whenever a bit or byte has been generated.
+ *
  * Usage:
  * /path/to/executable /path/to/output/file
  */
@@ -42,6 +46,8 @@ int main(int argc, char* argv[]) {
     fprintf(stderr, "cannot open output file\n");
     return 1;
   }
+
+  printf("press ONLY the ENTER key until the program terminates. Do not press it too quickly (no more than once per second)\n");
 
   // to keep track of how many bytes to write to output
   int N = NUM_BYTES;

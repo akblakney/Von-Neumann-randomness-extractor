@@ -22,3 +22,5 @@ This program takes as input a file of recorded atmospheric noise in `.wav` forma
 This program prompts the user to press the ENTER key repeatedly, and the time difference between the key inputs is used as an entropy source. Only the least significant bit of the number of nanoseconds between key strokes is used, so as long as keystrokes are a couple seconds apart, the output should be reliably random. (A potential limitation is the resolution, stability, and accuracy of the clock on your system, although as long as it supports nanosecond time resolution this should be fine). The output file to write the random data to is given on the command line:
 
 `$ ./vn_keyboard output_file`
+
+Note: this is not a very efficient way to generate random numbers, as you have to press enter 16 times on average to generate a single byte of random data. I think it is interesting nonetheless.
