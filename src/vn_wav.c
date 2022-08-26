@@ -51,11 +51,40 @@
   #define HEADER_LEN 100
 #endif
 
+bool verify_le_encoding(FILE *fp) {
+
+  // this is what the identifier should read if the file is
+  // in little-endian format (what we want)
+  unsigned char target[4] = {0x52, 0x49, 0x46, 0x46};
+
+  // seek to position zero
+  int success = fseek(fp, 0, SEEK_SET);
+  if (success != 0) {
+    fprintf(stderr, "seek to byte 0 failed\n");
+  }
+  
+  // check the header in the file
+  unsigned char c[4];
+  if (!fread(c, sizeof(c), 1, fp)) {
+    fprintf(stderr, "failed to read header identifier\n");
+  }
+
+  // compare
+  for (size_t i = 0; i < 4; i++) {
+    if (c[i] != target[i]) {
+      return false;
+    }
+  }
+  return true;
+  
+}
+
 /*
  * iterates over entire file fp, writing von neumann genereated output to of.
  * num_bytes gives the spacing between bytes to consider. Should be even.
+ * returns 0 on success, 1 on failure
  */
-void von_neumann_from_file(FILE *fp, FILE *of, uint16_t num_bytes) {
+int von_neumann_from_file(FILE *fp, FILE *of, uint16_t num_bytes) {
 
   uint8_t buf[num_bytes * 2];
   uint8_t curr_byte = 0;
@@ -64,10 +93,18 @@ void von_neumann_from_file(FILE *fp, FILE *of, uint16_t num_bytes) {
   uint8_t b2;
   int temp;
 
+  // verify little-endian encoding
+//  bool little_endian = verify_le_encoding(fp);
+  if (!verify_le_encoding(fp)) {
+    fprintf(stderr, "file is not in littl-endian encoding\n");
+    return 1;
+  }
+
   // skip over header part first
   int success = fseek(fp, HEADER_LEN, SEEK_SET);
   if (success != 0) {
     fprintf(stderr, "seek to skip header was not successful\n");
+    return 1;
   }
   
   // main loop
@@ -90,6 +127,7 @@ void von_neumann_from_file(FILE *fp, FILE *of, uint16_t num_bytes) {
       curr_byte = 0;
     } 
   }
+  return 0;
 }
 
 int main(int argc, char *argv[]) {
@@ -105,10 +143,14 @@ int main(int argc, char *argv[]) {
     return 1;
   }
 
-  von_neumann_from_file(fp, of, NUM_BYTES);
+  int success = von_neumann_from_file(fp, of, NUM_BYTES);
   
   fclose(fp);
   fclose(of);
+
+  if (!success) {
+    return 1;
+  }
   return 0; 
 
 }
