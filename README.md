@@ -4,11 +4,11 @@
 A true random number generator (TRNG), as opposed to a pseudo-random number generator (PRNG), requires two key components:
 
 - an unpredictable and random entropy source
-- some mechanism to transform that entropy source into a uniformly random output. 
+- some mechanism to transform that entropy source into a uniformly distributed random output. 
 
-The first requirement is not too difficult to fulfill: there are many good entropy sources such as electrical or atmospheric noise, or shot noise on a camera sensor. However transforming that entropy source into a uniform random output can prove tricky. The [Von Neumann randomness extractor](https://en.wikipedia.org/wiki/Randomness_extractor#Von_Neumann_extractor) is one method of doing this. Given uncorrelated but potentially biased input bits, the Von Neumann extractor will output a sequence of i.i.d. *unbiased* bits, i.e. a Bernoulli sequence with probability parameter 0.5.
+The first requirement is not too difficult to fulfill: there are many good entropy sources such as electrical or atmospheric noise, or shot noise on a camera sensor. However, transforming that entropy source into a uniform random output can prove tricky. The [Von Neumann randomness extractor](https://en.wikipedia.org/wiki/Randomness_extractor#Von_Neumann_extractor) is one method of doing this. Given uncorrelated but potentially biased input bits, the Von Neumann extractor will output a sequence of i.i.d. *unbiased* bits, i.e. a Bernoulli sequence with probability parameter 0.5.
 
-In this project, I implement the Von Neumann extractor generally (`von_neumann.c`), and then give driver programs that can use the extractor to generate random numbers from recorded atmospheric noise (`vn_wav.c`) and keyboard input timings (`vn_keyboard.c`).
+In this project, I implement the Von Neumann extractor generally (`von_neumann.c`), and then give driver programs that can use the extractor to generate random numbers from recorded atmospheric noise (`vn_wav.c`) and keyboard input timings (`vn_keyboard.c`). As long as the inputs to the Von Neumann extractor are identically distributed, the output of the Von Neumann extractor is guaranteed to be an i.i.d. sequence of uniform random bits. Here it is safe to say that the inputs are identically distributed, as long as the sample rate is low enough so that different samples share the same probability distribution and are not correlated. 
 
 ## Usage
 Each file contains commented portions that describe how to compile and use each program. You will find a more detailed explanation of compilation options and usage there.
