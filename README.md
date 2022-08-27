@@ -25,4 +25,4 @@ This program prompts the user to press the ENTER key repeatedly, and the time di
 
 `$ ./vn_keyboard output_file`
 
-Note: this is not a very efficient way to generate random numbers, as you have to press enter 16 times on average to generate a single byte of random data. I think it is interesting nonetheless.
+Note: this is not a very efficient way to generate random numbers, as you have to press enter 32 times on average to generate a single byte of random data. This is because there are 8 bits in a byte, two bits must be considered at a time to produce one bit of output, and on average half of the attempts to generate a bit will fail. Thus 8 x 2 x 2 = 32. I think it is interesting nonetheless.
