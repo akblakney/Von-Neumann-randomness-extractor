@@ -97,7 +97,7 @@ int von_neumann_from_file(FILE *fp, FILE *of, uint16_t num_bytes) {
 //  bool little_endian = verify_le_encoding(fp);
   if (!verify_le_encoding(fp)) {
     fprintf(stderr, "file is not in littl-endian encoding\n");
-    return 1;
+//    return 1;
   }
 
   // skip over header part first
