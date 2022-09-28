@@ -14,7 +14,8 @@
  *   HEADER_LEN=<int>]
  * 
  * Usage:
- * /path/to/executable /path/to/wav/file.wav /path/to/output/file
+ * cat input_file.wav | /path/to/executable > output_file
+ * or do whatever you want with your stdin or stdout :)
  */
 
 #include <stdio.h>
@@ -50,34 +51,6 @@
 #ifndef HEADER_LEN
   #define HEADER_LEN 100
 #endif
-
-bool verify_le_encoding(FILE *fp) {
-
-  // this is what the identifier should read if the file is
-  // in little-endian format (what we want)
-  unsigned char target[4] = {0x52, 0x49, 0x46, 0x46};
-
-  // seek to position zero
-  int success = fseek(fp, 0, SEEK_SET);
-  if (success != 0) {
-    fprintf(stderr, "seek to byte 0 failed\n");
-  }
-  
-  // check the header in the file
-  unsigned char c[4];
-  if (!fread(c, sizeof(c), 1, fp)) {
-    fprintf(stderr, "failed to read header identifier\n");
-  }
-
-  // compare
-  for (size_t i = 0; i < 4; i++) {
-    if (c[i] != target[i]) {
-      return false;
-    }
-  }
-  return true;
-  
-}
 
 /*
  * iterates over entire file fp, writing von neumann genereated output to of.
