@@ -84,7 +84,7 @@ bool verify_le_encoding(FILE *fp) {
  * num_bytes gives the spacing between bytes to consider. Should be even.
  * returns 0 on success, 1 on failure
  */
-int von_neumann_from_file(FILE *fp, FILE *of, uint16_t num_bytes) {
+int von_neumann_from_file(uint16_t num_bytes) {
 
   uint8_t buf[num_bytes * 2];
   uint8_t curr_byte = 0;
@@ -92,23 +92,16 @@ int von_neumann_from_file(FILE *fp, FILE *of, uint16_t num_bytes) {
   uint8_t b1;
   uint8_t b2;
   int temp;
+  int readCount = 0;
 
-  // verify little-endian encoding
-//  bool little_endian = verify_le_encoding(fp);
-  if (!verify_le_encoding(fp)) {
-    fprintf(stderr, "file is not in littl-endian encoding\n");
-//    return 1;
+  // skip over header
+  while (readCount < HEADER_LEN) {
+    fread(buf, sizeof(buf), 1, stdin);
+    readCount++;
   }
 
-  // skip over header part first
-  int success = fseek(fp, HEADER_LEN, SEEK_SET);
-  if (success != 0) {
-    fprintf(stderr, "seek to skip header was not successful\n");
-    return 1;
-  }
-  
   // main loop
-  while (fread(buf, sizeof(buf), 1, fp)) {
+  while (fread(buf, sizeof(buf), 1, stdin)) {
 
     b1 = buf[0] % 2;
     b2 = buf[num_bytes] % 2;
@@ -122,35 +115,23 @@ int von_neumann_from_file(FILE *fp, FILE *of, uint16_t num_bytes) {
 
     // check for full curr_byte and if it is write to file
     if (bitcount == BYTE_SIZE) {
-      fwrite(&curr_byte, sizeof(curr_byte), 1, of);
+      fwrite(&curr_byte, sizeof(curr_byte), 1, stdout);
       bitcount = 0;
       curr_byte = 0;
     } 
+    readCount++;
   }
   return 0;
 }
 
 int main(int argc, char *argv[]) {
   
-  FILE *fp = fopen(argv[1], "rb");
-  if (fp == NULL) {
-    fprintf(stderr, "cannot open input file\n");
-    return 1;
-  }
-  FILE *of = fopen(argv[2], "wb");
-  if (of == NULL) {
-    fprintf(stderr, "cannot open output file\n");
-    return 1;
-  }
-
-  int success = von_neumann_from_file(fp, of, NUM_BYTES);
+  int success = von_neumann_from_file(NUM_BYTES);
   
-  fclose(fp);
-  fclose(of);
-
   if (!success) {
     return 1;
   }
+
   return 0; 
 
 }
