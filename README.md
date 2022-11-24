@@ -16,19 +16,25 @@ For those interested in these types of design concerns of TRNGs, you could take 
 Here you will find a detailed explanation on compiling and using each of the programs.
 
 ### `vn_wav`
-This program reads binary data from stdin, processes the raw byte values with the Von Neumann randomness extractor, and then writes the processed (hopefully random) output to stdout. It takes one command line argument, an integer num_bytes, which gives the distance between bytes processed by the Von Neumann randomness extractor. Only EVEN values should be used for this parameter due to the way .wav files are formated (16-bit integers). While testing the output of the extractor, I have found that any positive even integer is sufficient to produce a quality random output. (More formally, I have found no evidence that any positive even integer does *not* produce a random output). Nonetheless, I recommend a larger value (perhaps 64 or 128) to be safe.
+This program reads binary data from `stdin`, processes the raw byte values with the Von Neumann randomness extractor, and then writes the processed (hopefully random) output to `stdout`. It takes one command line argument, an integer `num_bytes`, which gives the distance between bytes processed by the Von Neumann randomness extractor. Only *even* values should be used for this parameter due to the way *.wav* files are formated (16-bit integers). While testing the output of the extractor, I have found that any positive even integer is sufficient to produce a quality random output. (More formally, I have found no evidence that any positive even integer does *not* produce a random output). Nonetheless, I recommend a larger value (perhaps 64 or 128) to be safe.
 
 Note that the quality of randomness of the output is heavily dependent on the quality of the input, i.e. the recorded atmospheric noise must contain enough entropy and be formatted appropriately. For this reason, users must test their own setup with programs like [ent](https://www.fourmilab.ch/random/), or any other randomness testing software.
 
 To compile, navigate to the `src/` directory and execute the following command:
+
 `gcc von_neumann.c vn_wav.c -o /path/to/executable [optional flags: -D HEADER_LEN=<int>]`
 
-For Linux systems, if you want a binary executable in your $PATH, then you can use (you may need `sudo` privileges):
+For Linux systems, if you want a binary executable in your `$PATH`, then you can use (you may need `sudo` privileges):
+
 `gcc von_neumann.c vn_wav.c -o /usr/local/bin/von-neumann`
 
 Then, `von-neumann` will work anywhere on your system.
 
-Using the executable is then simple: if you have recorded atmospheric noise in `noise.wav`, you can output random data to a file `random_data` with `cat noise.wav | von-neumann 64 > random_data`. Be sure to adjust 
+Using the executable is then simple: if you have recorded atmospheric noise in `noise.wav`, you can output random data to a file `random_data` with:
+
+`cat noise.wav | von-neumann 64 > random_data`.
+
+(The above command assumes you put an executable called `von-neumann` somewhere in your `$PATH`, otherwise adjust the executable name accordingly). You can also change the value `num_bytes` value, which is set to 64 in the above command but can be adjusted to any positive even integer, with larger values giving more assurance that the output is random.
  
 ### `vn_keyboard`
 This program prompts the user to press the ENTER key repeatedly, and the time difference between the key inputs is used as an entropy source. Only the least significant bit of the number of nanoseconds between key strokes is used, so as long as keystrokes are a couple seconds apart, the output should be reliably random. (A potential limitation is the resolution, stability, and accuracy of the clock on your system, although as long as it supports nanosecond time resolution this should be fine). The output file to write the random data to is given on the command line:
