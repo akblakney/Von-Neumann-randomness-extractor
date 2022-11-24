@@ -13,7 +13,7 @@ In this project, I implement the Von Neumann extractor generally (`von_neumann.c
 For those interested in these types of design concerns of TRNGs, you could take a look at section 1.3 of [this paper](https://www.boazbarak.org/Papers/trng.pdf) by Barak, Shaltiel, and Tromer, which briefly discusses the Von Neumann extractor, and the use of "far away bits" as sources of i.i.d. inputs to a Von Neumann extractor.
 
 ## Usage
-Each file contains commented portions that describe how to compile and use each program. You will find a more detailed explanation of compilation options and usage there.
+Here you will find a detailed explanation on compiling and using each of the programs.
 
 ### `vn_wav`
 This program reads binary data from stdin, processes the raw byte values with the Von Neumann randomness extractor, and then writes the processed (hopefully random) output to stdout. It takes one command line argument, an integer num_bytes, which gives the distance between bytes processed by the Von Neumann randomness extractor. Only EVEN values should be used for this parameter due to the way .wav files are formated (16-bit integers). While testing the output of the extractor, I have found that any positive even integer is sufficient to produce a quality random output. (More formally, I have found no evidence that any positive even integer does *not* produce a random output). Nonetheless, I recommend a larger value (perhaps 64 or 128) to be safe.
