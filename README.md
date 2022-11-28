@@ -41,7 +41,7 @@ This program prompts the user to press the ENTER key repeatedly, and the time di
 
 To compile:
 
-`gcc von_neumann.c vn_keyboard.c -o /path/to/executable [optional:-D NUM_BYTES=<int> -D VERBOSE]
+`gcc von_neumann.c vn_keyboard.c -o /path/to/executable [optional:-D NUM_BYTES=<int> -D VERBOSE]`
 
 To use: 
 
