@@ -39,6 +39,12 @@ Using the executable is then simple: if you have recorded atmospheric noise in `
 ### `vn_keyboard`
 This program prompts the user to press the ENTER key repeatedly, and the time difference between the key inputs is used as an entropy source. Only the least significant bit of the number of nanoseconds between key strokes is used, so as long as keystrokes are a couple seconds apart, the output should be reliably random. (A potential limitation is the resolution, stability, and accuracy of the clock on your system, although as long as it supports nanosecond time resolution this should be fine). The output file to write the random data to is given on the command line:
 
+To compile:
+
+`gcc von_neumann.c vn_keyboard.c -o /path/to/executable [optional:-D NUM_BYTES=<int> -D VERBOSE]
+
+To use: 
+
 `$ ./vn_keyboard output_file`
 
 Note: this is not a very efficient way to generate random numbers, as you have to press enter 32 times on average to generate a single byte of random data. This is because there are 8 bits in a byte, two bits must be considered at a time to produce one bit of output, and on average half of the attempts to generate a bit will fail. Thus 8 x 2 x 2 = 32. I think it is interesting nonetheless.
